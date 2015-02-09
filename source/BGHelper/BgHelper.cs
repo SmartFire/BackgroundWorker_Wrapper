@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
-using BGHelper;
 
 namespace BgHelper
 {
@@ -171,6 +170,16 @@ namespace BgHelper
                         _threadCollection[i] = null;
                     }
                 }
+            }
+        }
+        /// <summary>
+        /// As the name suggests, calls .CancelAsync on all active workers.
+        /// </summary>
+        public void CancelAllWorkers()
+        {
+            for (var i = 0; i <= _workerCount - 1; i++)
+            {
+                if (_workerCollection[i] != null && _workerCollection[i].IsBusy) _workerCollection[i].CancelAsync();
             }
         }
 
