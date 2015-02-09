@@ -81,6 +81,7 @@ namespace BgHelper
         /// <remarks>Does not scale very well with very large collections.</remarks>
         public BackgroundWorker GetNextWorker()
         {
+            StopLooking = false;
             var sw = Stopwatch.StartNew();
             while (true)
             {
@@ -102,10 +103,12 @@ namespace BgHelper
         /// </summary>
         public void WaitForWorkers()
         {
+            StopLooking = false;
             var sw = Stopwatch.StartNew();
             var allDone = false;
             while (!allDone)
             {
+                if (StopLooking) return;
                 allDone = CheckCompletion();
                 Thread.Sleep(1);
                 DoEvents();
