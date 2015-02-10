@@ -5,7 +5,7 @@ It provides many methods to assist you when it comes to working with a large num
 Documentation and Examples can be found [here](http://zejustin.info/BackgroudWorker_Wrapper/)
 
 
-# Simple Example:
+# Simple Example (seen better [here](http://zejustin.info/BackgroudWorker_Wrapper/examples.php)):
 	class Examples
 	{
 		// Create a new instance of BgHelper with 200 workers, and tell it to not call DoEvents().
