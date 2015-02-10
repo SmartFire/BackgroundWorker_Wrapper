@@ -74,28 +74,34 @@ namespace BgHelper
         {
             if (CallDoEvents) System.Windows.Forms.Application.DoEvents();
         }
-
+        // Create some objects to lock up collections.
+        private readonly object _addLock = new object();
+        private readonly object _resetLock = new object();
+        private readonly object _getLock = new object();
         /// <summary>
         /// Will loop over the collection of workers and return the next available worker. 
         /// </summary>
         /// <remarks>Does not scale very well with very large collections.</remarks>
         public BackgroundWorker GetNextWorker()
         {
-            StopLooking = false;
-            var sw = Stopwatch.StartNew();
-            while (true)
+            lock (_getLock)
             {
-                if (StopLooking) return null;
-                for (var i = 0; i <= _workerCount - 1; i++)
+                StopLooking = false;
+                var sw = Stopwatch.StartNew();
+                while (true)
                 {
-                    if (_workerCollection[i] != null && _workerCollection[i].IsBusy) continue;
-                    _workerCollection[i] = new BackgroundWorker();
-                    return _workerCollection[i];
-                }
-                Thread.Sleep(1);
-                DoEvents();
-                if (sw.ElapsedMilliseconds > WaitTimeoutInMilliSeconds)
-                    throw new BgHelperTimeoutException("Timeout expired for GetNextWorker.");
+                    if (StopLooking) return null;
+                    for (var i = 0; i <= _workerCount - 1; i++)
+                    {
+                        if (_workerCollection[i] != null && _workerCollection[i].IsBusy) continue;
+                        _workerCollection[i] = new BackgroundWorker();
+                        return _workerCollection[i];
+                    }
+                    Thread.Sleep(1);
+                    DoEvents();
+                    if (sw.ElapsedMilliseconds > WaitTimeoutInMilliSeconds)
+                        throw new BgHelperTimeoutException("Timeout expired for GetNextWorker.");
+                }    
             }
         }
         /// <summary>
@@ -132,9 +138,6 @@ namespace BgHelper
             }
             return result;
         }
-        // Create some objects to lock up collections.
-        private readonly object _addLock = new object();
-        private readonly object _resetLock = new object();
         /// <summary>
         /// Returns and index of the threads location in the pool. Make sure to call ResetWorkerThread with this index as your worker finishes its task.
         /// </summary>
