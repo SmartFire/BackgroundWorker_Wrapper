@@ -6,6 +6,7 @@ Documentation and Examples can be found [here](http://zejustin.info/BackgroudWor
 
 
 # Simple Example (seen better [here](http://zejustin.info/BackgroudWorker_Wrapper/examples.php)):
+```C#
 	class Examples
 	{
 		// Create a new instance of BgHelper with 200 workers, and tell it to not call DoEvents().
@@ -54,3 +55,4 @@ Documentation and Examples can be found [here](http://zejustin.info/BackgroudWor
 			_workersHelper.ResetWorkerThread(index);
 		}
 	}
+```
